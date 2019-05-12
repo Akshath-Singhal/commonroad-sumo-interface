@@ -80,4 +80,3 @@ for t in range(conf.simulation_steps):
 
 create_video(sumo_sim, conf.video_start, conf.video_end, output_folder)
 ```
-By default, the videos are created in `\videos`.
