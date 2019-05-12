@@ -24,7 +24,7 @@ make -j8
 More options on the installation can be found here: https://sumo.dlr.de/wiki/Installing/Linux_Build .
 
 ## Configure SUMO and local environment
-1. copy the file `pathConfig_DEFAULT.py` and rename it to `pathConfig.py`. Add local paths, if required.
+copy the file `pathConfig_DEFAULT.py` and rename it to `pathConfig.py`. Add local paths, if required.
 
 # Integrating the SUMO-interface into CommonRoad
 - All scenarios are stored in `/scenarios`. All files for each scenario must be named consistently with the same scenario name as the folder.
