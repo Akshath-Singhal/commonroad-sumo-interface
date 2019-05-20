@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- generated on 2019-04-09 16:49:51.757673 by $Id$
+  options: -n /home/klischat/GIT_REPOS/sumo-interface/scenarios/a9/a9.net.xml -o /home/klischat/GIT_REPOS/sumo-interface/scenarios/a9/a9.trips.xml -r /home/klischat/GIT_REPOS/sumo-interface/scenarios/a9/a9.rou.xml -b 0 -e 20 -p 0.6666666666666666 <doubleminus>allow-fringe <doubleminus>trip-attributes=departLane="free" departSpeed="random" departPos="base" <doubleminus>period 0.588235294117647
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <trip id="0" depart="0.00" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="1" depart="0.59" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="2" depart="1.18" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="3" depart="1.76" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="4" depart="2.35" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="5" depart="2.94" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="6" depart="3.53" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="7" depart="4.12" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="8" depart="4.71" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="9" depart="5.29" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="10" depart="5.88" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="11" depart="6.47" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="12" depart="7.06" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="13" depart="7.65" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="14" depart="8.24" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="15" depart="8.82" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="16" depart="9.41" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="17" depart="10.00" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="18" depart="10.59" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="19" depart="11.18" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="20" depart="11.76" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="21" depart="12.35" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="22" depart="12.94" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="23" depart="13.53" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="24" depart="14.12" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="25" depart="14.71" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="26" depart="15.29" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="27" depart="15.88" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="28" depart="16.47" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="29" depart="17.06" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="30" depart="17.65" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="31" depart="18.24" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="32" depart="18.82" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+    <trip id="33" depart="19.41" from="135586672" to="135586672" departLane="free" departSpeed="random" departPos="base"/>
+</routes>

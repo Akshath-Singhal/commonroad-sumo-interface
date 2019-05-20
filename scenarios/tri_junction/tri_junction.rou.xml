@@ -1,0 +1,84 @@
+<?xml version="1.0" ?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+	<vehicle depart="0.00" departLane="free" departPos="base" departSpeed="random" id="0">
+		<route edges="-210015952.219"/>
+	</vehicle>
+	<vehicle depart="0.20" departLane="free" departPos="base" departSpeed="random" id="1">
+		<route edges="-210015962 -210015954 -4318974"/>
+	</vehicle>
+	<vehicle depart="0.60" departLane="free" departPos="base" departSpeed="random" id="3">
+		<route edges="4318974.270 210015954 -210015965"/>
+	</vehicle>
+	<vehicle depart="2.20" departLane="free" departPos="base" departSpeed="random" id="11">
+		<route edges="210015954 210015962 210015952"/>
+	</vehicle>
+	<vehicle depart="2.40" departLane="free" departPos="base" departSpeed="random" id="12">
+		<route edges="210015965 210015962"/>
+	</vehicle>
+	<vehicle depart="2.60" departLane="free" departPos="base" departSpeed="random" id="13">
+		<route edges="4318974.270 210015954 -210015965 -220864519"/>
+	</vehicle>
+	<vehicle depart="3.60" departLane="free" departPos="base" departSpeed="random" id="egoVehicle18">
+		<route edges="220864519 210015965 210015962 210015952"/>
+	</vehicle>
+	<vehicle depart="3.80" departLane="free" departPos="base" departSpeed="random" id="19">
+		<route edges="210015962 210015952"/>
+	</vehicle>
+	<vehicle depart="5.00" departLane="free" departPos="base" departSpeed="random" id="25">
+		<route edges="-210015954"/>
+	</vehicle>
+	<vehicle depart="5.80" departLane="free" departPos="base" departSpeed="random" id="29">
+		<route edges="210015965 -210015954"/>
+	</vehicle>
+	<vehicle depart="6.40" departLane="free" departPos="base" departSpeed="random" id="32">
+		<route edges="210015965 210015962"/>
+	</vehicle>
+	<vehicle depart="6.80" departLane="free" departPos="base" departSpeed="random" id="34">
+		<route edges="-210015965 -220864519"/>
+	</vehicle>
+	<vehicle depart="7.00" departLane="free" departPos="base" departSpeed="random" id="35">
+		<route edges="210015965 210015962 210015952"/>
+	</vehicle>
+	<vehicle depart="8.20" departLane="free" departPos="base" departSpeed="random" id="41">
+		<route edges="210015965 -210015954"/>
+	</vehicle>
+	<vehicle depart="8.80" departLane="free" departPos="base" departSpeed="random" id="44">
+		<route edges="210015962"/>
+	</vehicle>
+	<vehicle depart="9.60" departLane="free" departPos="base" departSpeed="random" id="48">
+		<route edges="4318974.270 210015954 -210015965"/>
+	</vehicle>
+	<vehicle depart="10.40" departLane="free" departPos="base" departSpeed="random" id="52">
+		<route edges="220864519 210015965 -210015954"/>
+	</vehicle>
+	<vehicle depart="10.80" departLane="free" departPos="base" departSpeed="random" id="54">
+		<route edges="-220864519"/>
+	</vehicle>
+	<vehicle depart="12.40" departLane="free" departPos="base" departSpeed="random" id="62">
+		<route edges="-220864519"/>
+	</vehicle>
+	<vehicle depart="14.40" departLane="free" departPos="base" departSpeed="random" id="72">
+		<route edges="4318974.270 210015954 210015962"/>
+	</vehicle>
+	<vehicle depart="14.60" departLane="free" departPos="base" departSpeed="random" id="73">
+		<route edges="210015954 -210015965 -220864519"/>
+	</vehicle>
+	<vehicle depart="14.80" departLane="free" departPos="base" departSpeed="random" id="74">
+		<route edges="-210015962"/>
+	</vehicle>
+	<vehicle depart="15.20" departLane="free" departPos="base" departSpeed="random" id="76">
+		<route edges="220864519 210015965 210015962 210015952"/>
+	</vehicle>
+	<vehicle depart="16.00" departLane="free" departPos="base" departSpeed="random" id="80">
+		<route edges="-210015965"/>
+	</vehicle>
+	<vehicle depart="16.60" departLane="free" departPos="base" departSpeed="random" id="83">
+		<route edges="-210015952.219"/>
+	</vehicle>
+	<vehicle depart="17.20" departLane="free" departPos="base" departSpeed="random" id="86">
+		<route edges="220864519 210015965 -210015954 -4318974"/>
+	</vehicle>
+	<vehicle depart="17.40" departLane="free" departPos="base" departSpeed="random" id="87">
+		<route edges="-210015962 -210015965 -220864519"/>
+	</vehicle>
+</routes>
