@@ -13,7 +13,7 @@ sudo apt-get install ffmpeg
 
 ## Install SUMO
 
-Clone a customized version of SUMO for smooth lane changes from https://gitlab.lrz.de/ge36pob/sumo and check out branch `smooth-lane-change`.
+Clone a customized version of SUMO for smooth lane changes from https://github.com/octavdragoi/sumo and check out branch `smooth-lane-change`.
 For installation we recommend building with:
 ```
 cd sumo

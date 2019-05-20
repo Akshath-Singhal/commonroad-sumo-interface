@@ -160,7 +160,6 @@ class SumoSimulation:
         for i in range(self.delta_steps):
             # send ego vehicles to SUMO
             if not self._dummy_ego_simulation and len(self.ego_vehicles) > 0:
-                #TODO: merge the functions _send_ego_vehicles and forward_info2sumo and call in correct order
                 self._send_ego_vehicles(self.ego_vehicles, i)
 
             # execute SUMO simulation step
@@ -471,7 +470,7 @@ class SumoSimulation:
         """
         if self.conf.lane_change_sync == True:
             #Check the error between SUMO and CR positions
-            cons_error = self._consistency_protection(ego_id, current_state)  # TODO adjust indices?
+            cons_error = self._consistency_protection(ego_id, current_state)
             if cons_error=='CONSISTENCY_NO_ERROR': #CONSISTENCY_NO_ERROR means error below the configured margin
                 if self._lc_inaction==0:
                     if lc_status == 'RIGHT_LC_STARTED':
