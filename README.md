@@ -11,12 +11,16 @@ pip install -r requirements.txt
 sudo apt-get install ffmpeg
 ```
 
+And add the absolute path of `commonroad-sumo-interface` to your Python interpreter.
+
 ## Install SUMO
 
 Clone a customized version of SUMO for smooth lane changes from https://github.com/octavdragoi/sumo and check out branch `smooth-lane-change`.
 For installation we recommend building with:
 ```
+sudo apt-get install cmake python g++ libxerces-c-dev libfox-1.6-dev libgdal-dev libproj-dev libgl2ps-dev swig
 cd sumo
+export SUMO_HOME="$PWD/sumo"
 mkdir build && cd build
 cmake ..
 make -j8
@@ -54,7 +58,7 @@ to the .sumo.cfg file of the scenario (activated by default for scenarios genera
 Further options for the interface can be found in the sumo-interface config file `sumo-interface/config/default.py`.
 
 ## Minimal example for using the interface:
-The file `example_scripts/minimal_example.py` gives an example how the interface can be integrated into an existing trajectory planner. For testing, the scenarios `cross_example_map` and `traci_tls` are recommended.
+The file `example_scripts/minimal_example.py` gives an example how the interface can be integrated into an existing trajectory planner.
 Plug in a trajectory planner and run:
 ```python
 from sumo2cr.interface.sumo_simulation import SumoSimulation
