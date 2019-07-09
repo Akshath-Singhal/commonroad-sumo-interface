@@ -20,7 +20,7 @@ __status__ = "Released"
 
 scenario_folder = os.path.join(os.path.dirname(__file__),'../scenarios')
 
-net_file = os.path.join(scenario_folder, 'a_9/a_9.net.xml')
+net_file = os.path.join(scenario_folder, 'a9/a9.net.xml')
 sumo_cfg_file = os.path.join(scenario_folder, 'a9/a9.sumo.cfg')
 
 # parameters
@@ -31,7 +31,7 @@ veh_per_second = 50
 n_ego_vehicles:int = 1
 ego_ids:List[int] = []
 initial_states:List[State] = []
-ego_start_time:int=4
+ego_start_time:int=10
 departure_time_ego = 3
 departure_interval_vehicles = Interval(0,20)
 

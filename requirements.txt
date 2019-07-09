@@ -1,2 +1,2 @@
 commonroad-io>=2018.1
-opendrive2lanelet>=1.0.1
+opendrive2lanelet>=1.1.0

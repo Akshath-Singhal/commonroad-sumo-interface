@@ -10,7 +10,7 @@ import warnings
 
 from commonroad.common.util import Interval
 from lxml import etree
-from opendrive2lanelet.io.extended_file_writer import ExtendedCommonRoadFileWriter
+from commonroad.common.file_writer import CommonRoadFileWriter
 from opendrive2lanelet.network import Network
 from opendrive2lanelet.opendriveparser.parser import parse_opendrive
 from sumo_config.default import EGO_ID_START
@@ -25,7 +25,7 @@ __status__ = "Released"
 
 
 
-def convert_net_to_cr(net_file:str, out_folder:str=None) -> str:
+def convert_net_to_cr(net_file:str, out_folder:str=None,verbose=False) -> str:
     """
     Converts .net file to CommonRoad xml using netconvert and OpenDRIVE 2 Lanelet Converter.
     :param net_file: path of .net.xml file
@@ -44,7 +44,8 @@ def convert_net_to_cr(net_file:str, out_folder:str=None) -> str:
 
     # convert to OpenDRIVE file using netconvert
     out = subprocess.check_output(['netconvert', '-s', net_file, '--opendrive-output', opendrive_file, '--junctions.scurve-stretch','1.0'])
-    print('xodr converted')
+    if verbose:
+        print('converted to OpenDrive (.xodr)')
     # convert to commonroad using opendrive2lanelet
     # import, parse and convert OpenDRIVE file
     with open(opendrive_file, "r") as fi:
@@ -53,9 +54,12 @@ def convert_net_to_cr(net_file:str, out_folder:str=None) -> str:
     road_network = Network()
     road_network.load_opendrive(open_drive)
     scenario = road_network.export_commonroad_scenario()
-    print('cr converted')
+    if verbose:
+        print('converted to Commonroad (.cr.xml)')
     # write CommonRoad scenario to file
-    commonroad_writer = ExtendedCommonRoadFileWriter(scenario, source="Converted from SUMO net using netconvert and OpenDRIVE 2 Lanelet Converter")
+    commonroad_writer = CommonRoadFileWriter(scenario, planning_problem_set=None,
+                                             source="Converted from SUMO net using netconvert and OpenDRIVE 2 Lanelet Converter",
+                                             tags='',author='',affiliation='')
     with open(cr_map_file, "w") as fh:
         commonroad_writer.write_scenario_to_file_io(file_io=fh)
 
