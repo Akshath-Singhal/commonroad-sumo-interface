@@ -9,16 +9,17 @@ class SumoCommonRoadConfig():
     # simulation
     dt = 0.1  # length of simulation step of the interface
     delta_steps = 2  # number of sub-steps simulated in SUMO during every dt
-    presimulation_steps = 10  # number of time steps before simulation with ego vehicle starts
+    presimulation_steps = 10  # number of time steps before simulation with ego vehicle starts (not plotted)
     simulation_steps = 100  # number of simulated (and synchronized) time steps
     with_sumo_gui = False
 
     # plotting
-    video_start = 1
+    video_start = 1  # start of
     video_end = 100
     scenario_name = '<scenario_name>'
     # autoscale plot limits; plot_x1,plot_x2, plot_y1, plot_y2 only works if plot_auto is False
     plot_auto = True
+    center_ego_vehicle = True  # video is centered at ego vehicle
     # axis limits of plot
     plot_x1 = 450
     plot_x2 = 550

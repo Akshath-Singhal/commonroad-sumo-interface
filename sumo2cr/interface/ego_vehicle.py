@@ -47,10 +47,10 @@ class EgoVehicle:
         """
 
         assert len(planned_state_list) >= self.delta_steps,\
-            'planned_trajectory must contain at least {} states, but contains {}. (See delta_steps in config file)'\
+            'planned_trajectory must contain at least {} states, but contains {}. (See delta_steps in sumo_config file)'\
                 .format(self.delta_steps,len(planned_state_list))
         assert 1 == planned_state_list[0].time_step,\
-            'planned_trajectory must start at next time_step ({}) but starts at time_step {}'\
+            'planned_trajectory must always start at time_step ({}) but starts at time_step {}'\
                 .format(1, planned_state_list[0].time_step)
         self._planned_trajectories[self.current_time_step] = planned_state_list
         self.add_state(planned_state_list[0])

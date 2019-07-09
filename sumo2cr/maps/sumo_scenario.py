@@ -13,7 +13,7 @@ from commonroad.scenario.lanelet import LaneletNetwork
 from commonroad.common.util import Interval
 from commonroad.common.file_reader import CommonRoadFileReader
 
-from config.default import SumoCommonRoadConfig as conf
+from sumo_config.default import SumoCommonRoadConfig as conf
 
 __author__ = "Moritz Klischat"
 __copyright__ = "TUM Cyber-Physical Systems Group"
@@ -140,8 +140,8 @@ class ScenarioWrapper:
 
     def _get_net_file(self, sumo_cfg_file):
         """
-        :param sumo_cfg_file: SUMO config file (.sumocfg)
-        :return: net-file specified in the config file
+        :param sumo_cfg_file: SUMO sumo_config file (.sumocfg)
+        :return: net-file specified in the sumo_config file
         """
         if not os.path.isfile(sumo_cfg_file):
             raise ValueError("File not found: {}. Maybe scenario name is incorrect.".format(sumo_cfg_file))

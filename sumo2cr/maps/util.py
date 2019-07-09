@@ -13,7 +13,7 @@ from lxml import etree
 from opendrive2lanelet.io.extended_file_writer import ExtendedCommonRoadFileWriter
 from opendrive2lanelet.network import Network
 from opendrive2lanelet.opendriveparser.parser import parse_opendrive
-from config.default import EGO_ID_START
+from sumo_config.default import EGO_ID_START
 
 __author__ = "Moritz Klischat"
 __copyright__ = "TUM Cyber-Physical Systems Group"

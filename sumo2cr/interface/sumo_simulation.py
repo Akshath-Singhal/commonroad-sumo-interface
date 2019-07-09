@@ -2,6 +2,23 @@ from collections import defaultdict
 import logging
 import math
 import sys, os
+import sumo_config.default
+import traci
+import numpy as np
+import copy
+from commonroad.scenario.trajectory import State
+from commonroad.planning.planning_problem import PlanningProblemSet
+from commonroad.scenario.scenario import Scenario
+from commonroad.scenario.obstacle import ObstacleType, DynamicObstacle
+from commonroad.geometry.shape import Rectangle
+from sumo2cr.interface.ego_vehicle import EgoVehicle
+from sumo2cr.maps.sumo_scenario import ScenarioWrapper
+from sumo2cr.interface.util import *
+from pathConfig import *
+from sumo_config.plot_params import *
+from sumo_config.default import SumoCommonRoadConfig
+from sumo2cr.interface.util import initialize_id_dicts
+from typing import Dict, List, Union, Type
 
 __author__ = "Moritz Klischat, Mostafa Eissa"
 __copyright__ = "TUM Cyber-Physical Systems Group"
@@ -16,24 +33,6 @@ if 'SUMO_HOME' in os.environ:
     sys.path.append(tools)
 else:
     sys.exit("please declare environment variable 'SUMO_HOME' to point at the path of your SUMO installation.")
-
-import config.default
-import traci
-import numpy as np
-import copy
-from commonroad.scenario.trajectory import State
-from commonroad.planning.planning_problem import PlanningProblemSet
-from commonroad.scenario.scenario import Scenario
-from commonroad.scenario.obstacle import ObstacleType, DynamicObstacle
-from commonroad.geometry.shape import Rectangle
-from sumo2cr.interface.ego_vehicle import EgoVehicle
-from sumo2cr.maps.sumo_scenario import ScenarioWrapper
-from sumo2cr.interface.util import *
-from pathConfig import *
-from config import plot_params
-from config.default import SumoCommonRoadConfig
-from sumo2cr.interface.util import initialize_id_dicts
-from typing import Dict, List, Union, Type
 
 logging.basicConfig(stream=sys.stderr, level=logging.CRITICAL)
 
@@ -51,7 +50,7 @@ class SumoSimulation:
         self.vehicledomain = traci._vehicle.VehicleDomain()
         self.routedomain = traci._route.RouteDomain()
         self._current_time_step = 0
-        self.ids_sumo2cr, self.ids_cr2sumo = initialize_id_dicts(config.default.ID_DICT)
+        self.ids_sumo2cr, self.ids_cr2sumo = initialize_id_dicts(sumo_config.default.ID_DICT)
         self.obstacle_shapes: Dict[int,Rectangle] = {}
         self.scenarios = ScenarioWrapper()
         self.ego_vehicles: Dict[int, EgoVehicle] = dict()
@@ -109,9 +108,9 @@ class SumoSimulation:
                 cr_id = self.cr_scenario.generate_object_id()
                 sumo_id = self._create_sumo_id()
                 self.vehicledomain.add(sumo_id,generic_route_id)
-                self.ids_sumo2cr[config.default.EGO_ID_START][sumo_id] = cr_id
+                self.ids_sumo2cr[sumo_config.default.EGO_ID_START][sumo_id] = cr_id
                 self.ids_sumo2cr['all_ids'][sumo_id] = cr_id
-                self.ids_cr2sumo[config.default.EGO_ID_START][cr_id] = sumo_id
+                self.ids_cr2sumo[sumo_config.default.EGO_ID_START][cr_id] = sumo_id
                 self.ids_cr2sumo['all_ids'][cr_id] = sumo_id
                 self._add_ego_vehicle(
                     EgoVehicle(cr_id, planning_problem.initial_state, self.conf.delta_steps, width, length, planning_problem))
@@ -210,9 +209,9 @@ class SumoSimulation:
                 state = self._get_current_state_from_sumo(veh_id)
                 if veh_id not in self.ids_sumo2cr['all_ids']:
                     # initializes new vehicle
-                    if veh_id.startswith(config.default.EGO_ID_START) and not self._silent:
+                    if veh_id.startswith(sumo_config.default.EGO_ID_START) and not self._silent:
                         # new ego vehicle
-                        cr_id = self._create_cr_id(config.default.EGO_ID_START, veh_id)
+                        cr_id = self._create_cr_id(sumo_config.default.EGO_ID_START, veh_id)
                         if self._dummy_ego_simulation:
                             state.time_step = step -1
                         else:
@@ -316,7 +315,7 @@ class SumoSimulation:
         """
         :return: dictionary with all current ego vehicle ids and corresponding sumo ids
         """
-        return self.ids_cr2sumo[config.default.EGO_ID_START]
+        return self.ids_cr2sumo[sumo_config.default.EGO_ID_START]
 
     def _create_sumo_id(self) -> int:
         """

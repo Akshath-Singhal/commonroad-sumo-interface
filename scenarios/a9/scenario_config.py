@@ -1,4 +1,4 @@
-from config.default import SumoCommonRoadConfig
+from sumo_config.default import SumoCommonRoadConfig
 
 class Conf(SumoCommonRoadConfig):
     verbose = True
@@ -14,7 +14,7 @@ class Conf(SumoCommonRoadConfig):
     video_end = simulation_steps
     scenario_name = 'a9'
     plot_auto = False  #plot_x1,plot_x2, plot_y1, plot_y2 only works if plot_auto is False
-    focus_ego_vehicle = True
+    center_ego_vehicle = True  # video is centered at ego vehicle
     plot_x1 = 50     #plot_x1 and plot_x2 defines the range of plotted scnario in x axis
     plot_x2 = 300
     plot_y1 = -10 #plot_y1 and plot_y2 defines the range of plotted scnario in y axis

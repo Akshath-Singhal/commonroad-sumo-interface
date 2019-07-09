@@ -3,8 +3,8 @@ import xml.etree.ElementTree as et
 
 import warnings
 
-import config.default
-from config import plot_params
+import sumo_config.default
+from sumo_config import plot_params
 
 __author__ = "Moritz Klischat"
 __copyright__ = "TUM Cyber-Physical Systems Group"
@@ -16,8 +16,8 @@ __status__ = "Released"
 
 def get_route_files(config_file):
     """
-    :param config_file: SUMO config file (.sumocfg)
-    :return: net-file and route-files specified in the config file
+    :param config_file: SUMO sumo_config file (.sumocfg)
+    :return: net-file and route-files specified in the sumo_config file
     """
     if not os.path.isfile(config_file):
         raise FileNotFoundError(config_file)
@@ -50,9 +50,9 @@ def initialize_id_dicts(id_convention):
 
 def generate_cr_id(type, sumo_id, ids_sumo2cr):
     """ Generates a new commonroad ID without adding it to any ID dictionary."""
-    if type not in config.default.ID_DICT:
+    if type not in sumo_config.default.ID_DICT:
         raise ValueError(
-            '{0} is not a valid type of id_convention. Only allowed: {1}'.format(type, config.default.ID_DICT.keys()))
+            '{0} is not a valid type of id_convention. Only allowed: {1}'.format(type, sumo_config.default.ID_DICT.keys()))
     if sumo_id in ids_sumo2cr[type]:
         warnings.warn('For this sumo_id there is already a commonroad id. No cr ID is generated')
         return ids_sumo2cr[type][sumo_id]
@@ -62,7 +62,7 @@ def generate_cr_id(type, sumo_id, ids_sumo2cr):
         # If this case happens for auto-generated nets, this code will have to be changed. Conversion of SUMO id to
         # cr id would have to incorporate type.
 
-    cr_id = int(str(config.default.ID_DICT[type]) + str(len(ids_sumo2cr[type])))
+    cr_id = int(str(sumo_config.default.ID_DICT[type]) + str(len(ids_sumo2cr[type])))
     return cr_id
 
 

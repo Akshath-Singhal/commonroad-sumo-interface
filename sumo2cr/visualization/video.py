@@ -1,9 +1,10 @@
 from commonroad.visualization.draw_dispatch_cr import draw_object
 from matplotlib import pyplot as plt, animation as manimation
-from config.plot_params import draw_params_obstacle, draw_params_ego
+from sumo_config.plot_params import draw_params_obstacle, draw_params_ego
 import warnings
 import os
 import time
+from copy import deepcopy
 from sumo2cr.interface.sumo_simulation import SumoSimulation
 
 __author__ = "Moritz Klischat"
@@ -80,9 +81,10 @@ def draw_plot(sumo_sim: SumoSimulation, time_step:int=None, _draw_params_ego=Non
 
     # set plot limits
     if (sumo_sim.conf.plot_auto == False):
-        if sumo_sim.conf.focus_ego_vehicle is True and len(ego_veh) > 0:
+        if sumo_sim.conf.center_ego_vehicle is True and len(ego_veh) > 0:
+            scenario = deepcopy(scenario)
             pos = ego_veh[0].initial_state.position
-            ori = sumo_sim.ego_vehicles[ego_veh[0].obstacle_id].initial_state.orientation# - np.deg2rad(90)
+            ori = sumo_sim.ego_vehicles[ego_veh[0].obstacle_id].initial_state.orientation # - np.deg2rad(90)
             # ori=0
 
             plot_limits = [-sumo_sim.conf.window_width / 2 + pos[0], sumo_sim.conf.window_width / 2 + pos[0],

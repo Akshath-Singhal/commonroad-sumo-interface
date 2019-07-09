@@ -1,4 +1,4 @@
-from config.default import SumoCommonRoadConfig
+from sumo_config.default import SumoCommonRoadConfig
 
 
 class Conf(SumoCommonRoadConfig):
@@ -14,7 +14,7 @@ class Conf(SumoCommonRoadConfig):
     scenario_name = 'tri_junction'
     with_sumo_gui = False
     plot_auto = False  #plot_x1,plot_x2, plot_y1, plot_y2 only works if plot_auto is False
-    focus_ego_vehicle = False
+    center_ego_vehicle = False
     plot_x1 = 300     #plot_x1 and plot_x2 defines the range of plotted scnario in x axis
     plot_x2 = 360
     plot_y1 = 190 #plot_y1 and plot_y2 defines the range of plotted scnario in y axis

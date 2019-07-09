@@ -11,4 +11,4 @@ SUMO_BINARY = '/home/user/sumo/bin/sumo'
 TRACI_PORT = 8873
 
 # default files (no adaption required)
-DEFAULT_CFG_FILE = 'config/.sumo.cfg'
+DEFAULT_CFG_FILE = 'sumo_config/.sumo.cfg'
