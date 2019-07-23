@@ -1,7 +1,15 @@
+import sys, os
+
+if 'SUMO_HOME' in os.environ:
+    tools = os.path.join(os.environ['SUMO_HOME'], 'tools')
+    sys.path.append(tools)
+else:
+    sys.exit("please declare environment variable 'SUMO_HOME'")
+
+
 from collections import defaultdict
 import logging
 import math
-import sys, os
 import sumo_config.default
 import traci
 import numpy as np
@@ -18,7 +26,7 @@ from pathConfig import *
 from sumo_config.plot_params import *
 from sumo_config.default import SumoCommonRoadConfig
 from sumo2cr.interface.util import initialize_id_dicts
-from typing import Dict, List, Union, Type
+from typing import Dict, List, Union, Type, Tuple
 
 __author__ = "Moritz Klischat, Mostafa Eissa"
 __copyright__ = "TUM Cyber-Physical Systems Group"
@@ -39,7 +47,7 @@ logging.basicConfig(stream=sys.stderr, level=logging.CRITICAL)
 
 class SumoSimulation:
     """
-    Class for interfacing between of SUMO simulation and CommonRoad.
+    Class for interfacing between the SUMO simulation and CommonRoad.
     """
     def __init__(self):
         """Init empty object"""
@@ -66,9 +74,10 @@ class SumoSimulation:
 
     def initialize(self, conf: Type[SumoCommonRoadConfig] = None) -> None:
         """
-        Read scenario files, start traci simulation, initialize vehicles, conduct pre-simulation.
+        Reads scenario files, starts traci simulation, initializes vehicles, conducts pre-simulation.
+
         :param conf: configuration object. If None, use default configuration.
-        :return:
+        
         """
 
         if conf is not None:
@@ -95,7 +104,13 @@ class SumoSimulation:
                 warnings.warn('<SumoSimulation/init_ego_vehicles> Ego vehicles are defined through .rou file and planning problem. Is that intended?')
             self.init_ego_vehicles_from_planning_problem(self.planning_problem_set)
 
-    def init_ego_vehicles_from_planning_problem(self, planning_problem_set: PlanningProblemSet):
+    def init_ego_vehicles_from_planning_problem(self, planning_problem_set: PlanningProblemSet) -> None:
+        """
+        Initializes the ego vehicles according to planning problem set.
+
+        :param planning_problem_set: The planning problem set which defines the ego vehicles. 
+        """
+
         # retrieve arbitrary route id for initialization (will not be used by interface)
         generic_route_id = self.routedomain.getIDList()[0]
 
@@ -116,21 +131,35 @@ class SumoSimulation:
                     EgoVehicle(cr_id, planning_problem.initial_state, self.conf.delta_steps, width, length, planning_problem))
 
     def _add_ego_vehicle(self, ego_vehicle: EgoVehicle):
+        """
+        Adds a ego vehicle to the current ego vehicle set.
+
+        :param ego_vehicle: the ego vehicle to be added.
+        """
         self._ego_vehicles[ego_vehicle.id] = ego_vehicle
 
     @property
     def ego_vehicles(self) -> Dict[int, EgoVehicle]:
+        """
+        Returns the ego vehicles of the current simulation.
+
+        """
         return self._ego_vehicles
 
     @ego_vehicles.setter
     def ego_vehicles(self, ego_vehicles: Dict[int, EgoVehicle]):
+        """
+        Sets the ego vehicles of the current simulation.
+
+        :param ego_behicles: ego vehicles used to set up the current simulation.
+        """
         if hasattr(self, '_ego_vehicles'):
             raise ValueError('Cannot set ego_vehicles, use SumoSimlation.forward_ego_vehicles() or ._add_ego_vehicle()')
         else:
             self._ego_vehicles = ego_vehicles
 
     @property
-    def current_time_step(self):
+    def current_time_step(self) -> int:
         """
         :return: current time step of interface
         """
@@ -138,22 +167,43 @@ class SumoSimulation:
 
     @current_time_step.setter
     def current_time_step(self,current_time_step):
+        """
+        Time step should not be set manually.
+        """
         raise(ValueError('Time step should not be set manually'))
 
     def print_lanelet_net(self, with_lane_id=True, with_succ_pred=False, with_adj=False, with_speed=False):
-        """ Plot commonroad road network without vehicles or obstacles."""
+        """ 
+        Plots commonroad road network without vehicles or obstacles.
+
+        :param with_lane_id: if set to true, the lane id will also be printed.
+        :param with_succ_pred: if set to true, the successor and predecessor lanelets will be printed.
+        :param with_adj: if set to true, adjacant lanelets will be printed.
+        :param with_speed: if set to true, the speed limit will be printed.
+        """
         self.scenarios.print_lanelet_net(with_lane_id=with_lane_id, with_succ_pred=with_succ_pred,
                                          with_adj=with_adj, with_speed=with_speed)
 
-    def commonroad_scenario_at_time_step(self, time_step, add_ego=False, start_0=True) -> Scenario:
-        """ creates a commonroad scenario at time_step. Initial time_step=0 for all obstacles."""
+    def commonroad_scenario_at_time_step(self, time_step:int, add_ego=False, start_0=True) -> Scenario:
+        """ 
+        Creates and returns a commonroad scenario at the given time_step. Initial time_step=0 for all obstacles.
+        
+        :param time_step: the scenario will be created according this time step.
+        :param add_ego: whether to add ego vehicles to the scenario.
+        :param start_0: if set to true, initial time step of vehicles is 0, otherwise, the current time step
+
+        
+        """
         self.cr_scenario = Scenario(self.dt, '1')
         self.cr_scenario.lanelet_network = self.scenarios.lanelet_network
         self.cr_scenario.add_objects(self._get_cr_obstacles(time_step, add_ego=add_ego, start_0=start_0))
         return self.cr_scenario
 
     def simulate_step(self) -> None:
-        """ execute next simulation step (consisting of delta_steps sub-steps with dt_sumo=dt/delta_steps) in SUMO"""
+        """ 
+        Executes next simulation step (consisting of delta_steps sub-steps with dt_sumo=dt/delta_steps) in SUMO
+        
+        """
 
         # simulate sumo scenario for delta_steps time steps
         for i in range(self.delta_steps):
@@ -171,7 +221,12 @@ class SumoSimulation:
         self._fetch_sumo_vehicles()
 
     def __presimulation_silent(self, presimulation_steps:int):
-        """Simulate SUMO without synchronization of interface. Used before starting interface simulation."""
+        """
+        Simulate SUMO without synchronization of interface. Used before starting interface simulation.
+        
+        :param presimulation_steps: the steps of simulation which are executed before checking the existence of ego vehicles and configured simulation step.
+        
+        """
         assert self.current_time_step == 0
         assert presimulation_steps >= 0, \
             'ego_time_start={} must be >0'.format(self.conf.presimulation_steps)
@@ -200,7 +255,10 @@ class SumoSimulation:
             warnings.warn('Simulated {} more steps until ego vehicle entered simulation.'.format((j-1)/self.conf.delta_steps), stacklevel=1)
 
     def _fetch_sumo_vehicles(self):
-        """ gets and stores all vehicle states from SUMO. Initializes ego vehicles when they enter simulation."""
+        """
+        Gets and stores all vehicle states from SUMO. Initializes ego vehicles when they enter simulation.
+        
+        """
         step = self.current_time_step
         vehicle_ids = self.vehicledomain.getIDList()
 
@@ -244,6 +302,13 @@ class SumoSimulation:
                     ego_veh.set_planned_trajectory(state_list)
 
     def _get_current_state_from_sumo(self, veh_id: str) -> State:
+        """
+        Gets the current state from sumo.
+
+        :param veh_id: the id of the vehicle, whose state will be returned from SUMO.
+
+        :return: the state of the given vehicle 
+        """
         state = State(position=np.array(self.vehicledomain.getPosition(veh_id)),
                       orientation=math.radians(-self.vehicledomain.getAngle(veh_id) + 90),
                       velocity=self.vehicledomain.getSpeed(veh_id),
@@ -253,11 +318,12 @@ class SumoSimulation:
 
     def _get_cr_obstacles(self, time_step: int, add_ego:bool=False, start_0:bool=False) -> List[DynamicObstacle]:
         """
-        Get all vehicles in commonroad format from recorded simulation.
+        Gets all vehicles in commonroad format from recorded simulation.
+
         :param time_step: time step of scenario
         :param add_ego: if True, add ego vehicles as well
         :param start_0: if True, initial time step of vehicles is 0, otherwise, the current time step
-        :return:
+
         """
         vehicle_dict: Dict[int,State] = self.obstacle_states[time_step]
         obstacles = []
@@ -292,10 +358,13 @@ class SumoSimulation:
 
     def _send_ego_vehicles(self, ego_vehicles: Dict[int, EgoVehicle], delta_step:int=0) -> None:
         """
+        Sends the infomation of ego vehicles to SUMO.
+
         :param ego_vehicles: list of dictionaries.
             For each ego_vehicle, write tuple (cr_ego_id, cr_position, cr_lanelet_id, cr_orientation, cr_lanelet_id)
             cr_lanelet_id can be omitted but this is not recommended, if the lanelet is known for sure.
         :param delta_step: which time step of the planned trajectory should be sent
+
         """
         for id_cr, ego_vehicle in ego_vehicles.items():
             assert ego_vehicle.current_time_step == self.current_time_step,\
@@ -313,13 +382,13 @@ class SumoSimulation:
 
     def _get_ego_ids(self) -> Dict[int, str]:
         """
-        :return: dictionary with all current ego vehicle ids and corresponding sumo ids
+        Returns a dictionary with all current ego vehicle ids and corresponding sumo ids
         """
         return self.ids_cr2sumo[sumo_config.default.EGO_ID_START]
 
     def _create_sumo_id(self) -> int:
         """
-        Generate a new unused id for SUMO
+        Generates a new unused id for SUMO
         :return:
         """
         id_list = self.vehicledomain.getIDList()
@@ -332,11 +401,13 @@ class SumoSimulation:
                 id += 1
                 i+=1
 
-    def _create_cr_id(self, type, sumo_id) -> int:
+    def _create_cr_id(self, type:str, sumo_id) -> int:
         """
         Generates a new cr ID and adds it to ID dictionaries
+
         :param type: one of the keys in params.id_convention; the type defines the first digit of the cr_id
         :param sumo_id: id in sumo simulation
+
         :return: cr_id as int
         """
         cr_id = generate_cr_id(type, sumo_id, self.ids_sumo2cr)
@@ -358,19 +429,21 @@ class SumoSimulation:
         self.__silent = silent
 
     def stop(self):
-        """ exit Simulation """
+        """ Exits SUMO Simulation """
         traci.close()
         sys.stdout.flush()
 
     # Ego sync functions
-    def check_lanelets_future_change(self, current_state:State, planned_traj:List[State]):
+    def check_lanelets_future_change(self, current_state:State, planned_traj:List[State]) -> Tuple[str, int]:
         """
-        Check the lanelet changes of the ego vehicle in the future time_window
+        Checks the lanelet changes of the ego vehicle in the future time_window.
+
         :param lanelet_network: object of the lanelet network
         :param time_window: the time of the window to check the lanelet change
-        :param traj_index: index of the planner planner output corresponds to the current time
-        :return: lc_status: status of the lanelet change in the next time_window
-        :return: lc_duration: lc_duration in time steps (using sumo dt)
+        :param traj_index: index of the planner output corresponding to the current time step
+
+        :return: lc_status, lc_duration: lc_status is the status of the lanelet change in the next time_window; lc_duration is the unit of time steps (using sumo dt)
+
         """
         lc_duration_max = min(self.conf.lanelet_check_time_window,len(planned_traj))
         lanelet_network = self.scenarios.lanelet_network
@@ -403,14 +476,16 @@ class SumoSimulation:
             print('lc_duration=' + str(lc_duration))
         return lc_status,lc_duration
 
-    def check_lc_start(self,ego_id:int,lc_future_status:str):
+    def check_lc_start(self,ego_id:str,lc_future_status:str) ->str:
         """
         This function checks if a lane change is started according to the change in the lateral position and the lanelet
         change prediction. Note that checking the change of lateral position only is sensitive to the tiny changes, also
         at the boundaries of the lanes the lateral position sign is changed because it will be calculated relative to
         the new lane. So we check the future lanelet change to avoid these issues.
-        :param ego_id: id of the ego vehicle (string)
-        :param lc_future_status: future lanelet changes status
+
+        :param ego_id: id of the ego vehicle
+        :param lc_future_status: status of the future lanelet changes 
+
         :return: lc_status: the status whether the ego vehicle starts a lane change or no
         """
         lateral_position = self.vehicledomain.getLateralLanePosition(cr2sumo(ego_id, self.ids_cr2sumo))
@@ -431,14 +506,15 @@ class SumoSimulation:
 
         return lc_status
 
-    def _consistency_protection(self,ego_id,current_state:State):
+    def _consistency_protection(self,ego_id:str, current_state:State) -> str:
         """
-        Check the L2 distance between SUMO position and the planner position and return CONSISTENCY_ERROR if it is
-        above the configured margin
-        :param traci_vehdomain: traci vehicle domain
+        Checks the L2 distance between SUMO position and the planner position and returns CONSISTENCY_ERROR if it is
+        above the configured margin.
+
         :param ego_id: id of the ego vehicle (string)
-        :param traj_index: index of the planner planner output corresponds to the current time
-        :return: retval: the status whether there is consistency error between sumo and planner positions or no
+        :param current_state: the current state read from the commonroad motion planner
+
+        :return: retval: the status whether there is a consistency error between sumo and planner positions or not
         """
         cons_error = 'CONSISTENCY_NO_ERROR'
 
@@ -458,13 +534,14 @@ class SumoSimulation:
             cons_error = 'CONSISTENCY_NO_ERROR'
         return cons_error
 
-    def check_sync_mechanism(self, lc_status:str, ego_id:int, current_state:State):
+    def check_sync_mechanism(self, lc_status:str, ego_id:int, current_state:State) -> str:
         """
-        Define the sync mechanism type that should be executed according to the ego vehicle motion
-        :param traci_vehdomain: traci vehicle domain
-        :param ego_id: id of the ego vehicle (string)
+        Defines the sync mechanism type that should be executed according to the ego vehicle motion.
+
         :param lc_status: status of the lanelet change in the next time_window
-        :param traj_index: index of the planner planner output corresponds to the current time
+        :param ego_id: id of the ego vehicle (string)
+        :param current_state: the current state read from the commonroad motion planner
+        
         :return: retval: the sync mechanism that should be followed while communicating from the interface to sumo
         """
         if self.conf.lane_change_sync == True:
@@ -497,13 +574,14 @@ class SumoSimulation:
             print('Lane change performed since ' + str(self._lc_counter))
         return retval
 
-    def forward_info2sumo(self, planned_state:State, sync_mechanism:str, lc_duration:int, ego_id:id):
+    def forward_info2sumo(self, planned_state:State, sync_mechanism:str, lc_duration:int, ego_id:str):
         """
-        Forward the information to sumo (either initiate moveToXY or changeLane) according to the sync mechanism
-        :param traci_vehdomain: traci vehicle domain
+        Forwards the information to sumo (either initiate moveToXY or changeLane) according to the sync mechanism.
+        
+        :param planned_state: the planned state from commonroad motion planner
         :param sync_mechanism: the sync mechanism that should be followed while communicating from the interface to sumo
-        :param traj_index: index of the planner planner output corresponds to the current time
-        :param ego_id: id of the ego vehicle (string)
+        :param lc_duration: lane change duration, expressed in number of time steps
+        :param ego_id: id of the ego vehicle
         """
         id_sumo = cr2sumo(ego_id, self.ids_cr2sumo)
 

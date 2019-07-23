@@ -3,7 +3,7 @@ from typing import Dict, List, Union
 import numpy as np
 import copy
 from commonroad.geometry.shape import Rectangle
-from commonroad.planning.planning_problem import PlanningProblem
+from commonroad.planning.planning_problem import PlanningProblem, GoalRegion
 from commonroad.prediction.prediction import TrajectoryPrediction
 from commonroad.scenario.obstacle import DynamicObstacle, ObstacleType
 from commonroad.scenario.trajectory import State, Trajectory
@@ -40,10 +40,10 @@ class EgoVehicle:
 
     def set_planned_trajectory(self, planned_state_list:List[State]) -> None:
         """
-        Set planned trajectory beginning with current time step.
-        :param planned_state_list:
-        :param initial_time_step. If None, add at current time step
-        :return:
+        Sets planned trajectory beginning with current time step.
+
+        :param planned_state_list: the planned trajectory
+
         """
 
         assert len(planned_state_list) >= self.delta_steps,\
@@ -57,15 +57,16 @@ class EgoVehicle:
 
     @property
     def get_planned_trajectory(self) -> List[State]:
-        """Get planned trajectory from current time step"""
+        """Gets planned trajectory according to the current time step"""
         return self._planned_trajectories[self.current_time_step]
 
     def get_dynamic_obstacle(self,time_step: Union[int,None]=None) -> DynamicObstacle:
         """
-        If time step is false, add complete driven trajectory.
-        If time step is int: start from given step and add planned trajectory
+        If time step is false, adds complete driven trajectory and returns the dynamic obstacles.
+        If time step is int: starts from given step and adds planned trajectory and returns the dynamic obstacles.
+
         :param time_step: initial time step of vehicle
-        :return: DynamicObstacle
+        :return: DynamicObstacle object of the ego vehicle.
         """
         if time_step is False:
             return DynamicObstacle(self.id,obstacle_type=ObstacleType.CAR,
@@ -86,6 +87,12 @@ class EgoVehicle:
             raise ValueError('time needs to be None or integer')
 
     def get_planned_state(self, delta_step: int=0):
+        """
+        Returns the planned state.
+
+        :param delta_step: get plannedd state after delta steps
+        
+        """
         planned_state:State = copy.deepcopy(self._planned_trajectories[self.current_time_step][0])
         if self.delta_steps > 1:
             # linear interpolation
@@ -98,12 +105,20 @@ class EgoVehicle:
 
     @property
     def current_state(self) -> State:
+        """
+        Returns the current state.
+        """
         if self.current_time_step == self.initial_state.time_step:
             return self.initial_state
         else:
             return self._state_dict[self.current_time_step]
 
-    def get_state_at_timestep(self,time_step: int):
+    def get_state_at_timestep(self,time_step: int) -> State:
+        """
+        Returns the state according to the given time step.
+
+        :param time_step: the state is returned according to this time step.
+        """
         if time_step == self.initial_state.time_step:
             return self.initial_state
         else:
@@ -116,7 +131,10 @@ class EgoVehicle:
         raise PermissionError('current_state cannot be set manually, use set_planned_trajectory()')
 
     @property
-    def current_time_step(self):
+    def current_time_step(self) -> int:
+        """
+        Returns current time step.
+        """
         return self._current_time_step
 
     @current_time_step.setter
@@ -124,17 +142,26 @@ class EgoVehicle:
         raise PermissionError('current_state cannot be set manually, use set_planned_trajectory()')
 
     @property
-    def goal(self):
+    def goal(self) -> GoalRegion:
+        """
+        Returns the goal of the planning problem.
+        """
         return self.planning_problem.goal
 
-    def add_state(self,state):
+    def add_state(self, state: State) -> None:
+        """
+        Adds a state to the current state dictionary.
+
+        :param state: the state to be added
+
+        """
         self._state_dict[self._current_time_step+1] = state
 
     @property
     def driven_trajectory(self) -> TrajectoryPrediction:
         """
         Returns trajectory prediction object for driven trajectory (mainly for plotting)
-        :return:
+
         """
         state_dict_tmp ={}
         for t, state in self._state_dict.items():
@@ -152,7 +179,10 @@ class EgoVehicle:
             return
 
     @property
-    def width(self):
+    def width(self) -> float:
+        """
+        Returns the width of the ego vehicle.
+        """
         return self._width
 
     @width.setter
@@ -162,7 +192,10 @@ class EgoVehicle:
             return
 
     @property
-    def length(self):
+    def length(self) -> float:
+        """
+        Returns the length of the ego vehicle.
+        """
         return self._length
 
     @length.setter
@@ -172,7 +205,10 @@ class EgoVehicle:
             return
 
     @property
-    def initial_state(self):
+    def initial_state(self) -> State:
+        """
+        Returns the initial state of the ego vehicle.
+        """
         return self._initial_state
 
     @initial_state.setter

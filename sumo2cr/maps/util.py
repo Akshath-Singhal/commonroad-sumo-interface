@@ -28,9 +28,11 @@ __status__ = "Released"
 def convert_net_to_cr(net_file:str, out_folder:str=None,verbose=False) -> str:
     """
     Converts .net file to CommonRoad xml using netconvert and OpenDRIVE 2 Lanelet Converter.
+
     :param net_file: path of .net.xml file
     :param out_folder: path of output folder for CommonRoad scenario.
-    :return:
+
+    :return: commonroad map file
     """
     assert isinstance(net_file,str)
 
@@ -65,14 +67,15 @@ def convert_net_to_cr(net_file:str, out_folder:str=None,verbose=False) -> str:
 
     return cr_map_file
 
-def find_ego_ids_by_departure_time(rou_file, n_ego_vehicles, departure_time_ego, ego_ids):
+def find_ego_ids_by_departure_time(rou_file: str, n_ego_vehicles: int, departure_time_ego: int, ego_ids: list) -> list:
     """
-    Get ids of vehicles from route file which match desired departure time as close as possible.
+    Returns ids of vehicles from route file which match desired departure time as close as possible.
+
     :param rou_file: path of route file
     :param n_ego_vehicles:  number of ego vehicles
     :param departure_time_ego: desired departure time ego vehicle
-    :param: ego_ids: if desired ids of ego_vehicle known, specify here
-    :return:
+    :param ego_ids: if desired ids of ego_vehicle known, specify here
+
     """
     vehicles = sumolib.output.parse_fast(rou_file, 'vehicle', ['id', 'depart'])
     dep_times = []
@@ -109,20 +112,29 @@ def find_ego_ids_by_departure_time(rou_file, n_ego_vehicles, departure_time_ego,
 
 
 def get_scenario_name_from_netfile(filepath:str) -> str:
+    """
+    Returns the scenario name specified in the net file.
+
+    :param filepath: the path of the net file
+
+    """
     scenario_name:str = (os.path.splitext(os.path.basename(filepath))[0]).split('.')[0]
     return scenario_name
 
 def generate_rou_file(net_file:str, dt:float, n_vehicles_max:int, departure_time: Interval, n_ego_vehicles:int, departure_time_ego:int, ego_ids:List[int]=None, veh_per_second:float=None, out_folder:str=None) -> str:
     """
-    Create route & trips files using randomTrips generator.
+    Creates route & trips files using randomTrips generator.
+
     :param net_file: path of .net.xml file
+    :param dt: length of the time step
     :param n_vehicles_max: max. number of vehicles in route file
     :param departure_time: Interval of departure times for vehicles
     :param n_ego_vehicles: number of ego vehicles
     :param departure_time_ego: desired departure time ego vehicle
-    :param: ego_ids: if desired ids of ego_vehicle known, specify here
+    :param ego_ids: if desired ids of ego_vehicle known, specify here
     :param veh_per_second: number of vehicle departures per second
     :param out_folder: output folder of route file (same as net_file if None)
+
     :return: path of route file
     """
     if out_folder is None:
@@ -158,7 +170,14 @@ def generate_rou_file(net_file:str, dt:float, n_vehicles_max:int, departure_time
     return rou_file
 
 
-def write_ego_ids_to_rou_file(rou_file:str, ego_ids:List[int]):
+def write_ego_ids_to_rou_file(rou_file:str, ego_ids:List[int]) -> None:
+    """
+    Writes ids of ego vehicles to the route file.
+
+    :param rou_file: the route file
+    :param ego_ids: a list of ego vehicle ids
+
+    """
     tree = et.parse(rou_file)
     vehicles = tree.findall('vehicle')
     ego_str = {}

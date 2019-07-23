@@ -1,6 +1,6 @@
 # SUMO - CommonRoad Interface
 
-This interface couples the framework for motion planning of automated vehicles based on [CommonRoad_io](https://pypi.org/project/commonroad-io/) and the traffic simulator [SUMO](https://sumo.dlr.de).
+This package implements the interface between the framework for motion planning of automated vehicles [CommonRoad_io](https://pypi.org/project/commonroad-io/) and the traffic simulator [SUMO](https://sumo.dlr.de). The interface is presented in detail in our [paper](https://mediatum.ub.tum.de/doc/1486856/344641.pdf) [1] and a documentation of the API can be found [here]( https://commonroad.in.tum.de/static/docs/commonroad-sumo-interface/index.html).
 
 # Prerequisites
 The package is written in Python 3.6 and tested on Linux.
@@ -17,6 +17,7 @@ And add the absolute path of `commonroad-sumo-interface` to your Python interpre
 
 Clone a customized version of SUMO for smooth lane changes from https://github.com/octavdragoi/sumo and check out branch `smooth-lane-change`.
 For installation we recommend building with:
+
 ```
 sudo apt-get install cmake python g++ libxerces-c-dev libfox-1.6-dev libgdal-dev libproj-dev libgl2ps-dev swig
 cd sumo
@@ -25,6 +26,7 @@ mkdir build && cd build
 cmake ..
 make -j8
 ```
+
 More options on the installation can be found here: https://sumo.dlr.de/wiki/Installing/Linux_Build .
 
 ## Configure SUMO and local environment
@@ -82,5 +84,8 @@ for t in range(conf.simulation_steps):
 
     sumo_sim.simulate_step()
 
+sumo_sim.stop()
 create_video(sumo_sim, conf.video_start, conf.video_end, output_folder)
 ```
+
+[1] Moritz Klischat, Octav Dragoi, Mostafa Eissa, and Matthias Althoff, Coupling SUMO with a Motion Planning Framework for Automated Vehicles, SUMO 2019: Simulating Connected Urban Mobility

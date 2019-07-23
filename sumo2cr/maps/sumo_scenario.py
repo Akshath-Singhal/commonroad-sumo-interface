@@ -40,7 +40,16 @@ class ScenarioWrapper:
         self.sumo_net = None
         self.lanelet_network: LaneletNetwork = None
 
-    def initialize(self,scenario_name:str,sumo_cfg_file:str,cr_map_file:str,ego_start_time:int=None):
+    def initialize(self,scenario_name:str, sumo_cfg_file:str, cr_map_file:str, ego_start_time: int = None) -> None:
+        """
+        Initializes the ScenarioWrapper.
+
+        :param scenario_name: the name of the scenario
+        :param sumo_cfg_file: the .sumocfg file
+        :param cr_map_file: the commonroad map file
+        :param ego_start_time: the start time of the ego vehicle
+
+        """
         self.scenario_name = scenario_name
         self.sumo_cfg_file = sumo_cfg_file
         self.net_file = self._get_net_file(self.sumo_cfg_file)
@@ -51,7 +60,15 @@ class ScenarioWrapper:
         # self.sumo_net = sumolib_net.readNet(self.net_file, withInternal=True)
 
     @classmethod
-    def init_from_scenario(cls, scenario_name, ego_start_time=None) -> 'ScenarioWrapper':
+    def init_from_scenario(cls, scenario_name: str, ego_start_time:int =None) -> 'ScenarioWrapper':
+        """
+        Initializes the ScenarioWrapper according to the given scenario_name/ego_start_time and returns the ScenarioWrapper.
+
+        :param cls:
+        :param scenario_name: name of the scenario usef for the initialization.
+        :param ego_start_time: the start time of the ego vehicle.
+
+        """
         obj = cls()
         sumo_cfg_file = os.path.join(os.path.dirname(__file__), '../../scenarios/',scenario_name, scenario_name + '.sumo.cfg')
         cr_map_file = os.path.join(os.path.dirname(__file__), '../../scenarios/',scenario_name, scenario_name + '.cr.xml')
@@ -67,14 +84,15 @@ class ScenarioWrapper:
     def recreate_route_file(cls, sumo_cfg_file, dt:float, n_vehicles_max:int, n_ego_vehicles:int, ego_ids:List[int]=[], ego_start_time:int=0,
                             departure_time_ego:int=0, departure_interval_vehicles:Interval=Interval(0,conf.simulation_steps),veh_per_second=None) -> 'ScenarioWrapper':
         """
-        Creates new .rou.xml file. Assumes .cr.xml, .net.xml and .sumo.cfg file have already been created in scenario folder.
+        Creates new .rou.xml file and returns ScenarioWrapper. Assumes .cr.xml, .net.xml and .sumo.cfg file have already been created in scenario folder.
+
         :param sumo_cfg_file:
         :param n_vehicles_max:
         :param n_ego_vehicles:
         :param ego_ids:
         :param ego_start_time:
         :param departure_interval_vehicles:
-        :return:
+
         """
         sumo_scenario = cls()
         out_folder = os.path.dirname(sumo_cfg_file)
@@ -91,14 +109,19 @@ class ScenarioWrapper:
                                  ego_start_time:int=0, departure_time_ego:int=0,
                                  departure_interval_vehicles:Interval=Interval(0,conf.simulation_steps), veh_per_second=None,scenario_folder:str=None) -> 'ScenarioWrapper':
         """
-        Convert net file to CommonRoad xml and generate specify ego vehicle either by using generated vehicles and/or by initial states.
+        Convert net file to CommonRoad xml and generate specific ego vehicle either by using generated vehicles and/or by initial states.
+
         :param net_file: path of .net.xml file
         :param dt: length of time step
-        :param n_vehicles_max: total number of ego vehicles that are generated
-        :param ego_id: if specified, vehicle with given id from .rou file is marked as ego_vehicle
-        :param initial_state: List of initial states for ego vehicle
-        :param scenario_folder: folder that contains all scenario folders. If not given, use folder from net_file
-        :return:
+        :param n_vehicles_max: max number of vehicles
+        :param n_ego_vehicles: total number of ego vehicles that are generated
+        :param ego_ids: if specified, vehicle with given id from .rou file is marked as ego_vehicle
+        :param ego_start_time: the starting time of ego vehicles
+        :param departure_time_ego: interval of departure times for ego vehicles
+        :param departure_interval_vehicles: interval of departure times for vehicles
+        :param veh_per_second: number of vehicle departures per second
+        :param scenario_folder: folder that contains all scenario folders. If not given, use commonroad-sumo-interface/scenarios/scenario_name
+     
         """
         assert len(ego_ids) <= n_ego_vehicles, "total number of given ego_vehicles must be <= n_ego_vehicles, but {}not<={}"\
             .format(len(ego_ids),n_ego_vehicles)
@@ -120,7 +143,16 @@ class ScenarioWrapper:
         sumo_scenario.initialize(scenario_name,sumo_cfg_file,cr_map_file,ego_start_time)
         return sumo_scenario
 
-    def generate_cfg_file(self, scenario_name, output_folder:str):
+    def generate_cfg_file(self, scenario_name:str, output_folder:str) -> str:
+        """
+        Generates the configuration file according to the scenario name to the specified output folder.
+
+        :param scenario_name: name of the scenario used for the cfg file generation.
+        :param output_folder: the generated cfg file will be saved here
+
+        :return: the path of the generated cfg file.
+        """
+
         sumo_cfg_file = os.path.join(output_folder, scenario_name + '.sumo.cfg')
         tree = et.parse(os.path.join(os.path.dirname(__file__), '../../',DEFAULT_CFG_FILE),)
         tree.findall('*/net-file')[0].attrib['value'] = scenario_name + '.net.xml'
@@ -138,10 +170,13 @@ class ScenarioWrapper:
 
         return sumo_cfg_file
 
-    def _get_net_file(self, sumo_cfg_file):
+    def _get_net_file(self, sumo_cfg_file: str) -> str:
         """
-        :param sumo_cfg_file: SUMO sumo_config file (.sumocfg)
-        :return: net-file specified in the sumo_config file
+        Gets the net file configured in the cfg file.
+
+        :param sumo_cfg_file: SUMO config file (.sumocfg)
+
+        :return: net-file specified in the config file
         """
         if not os.path.isfile(sumo_cfg_file):
             raise ValueError("File not found: {}. Maybe scenario name is incorrect.".format(sumo_cfg_file))
@@ -153,7 +188,16 @@ class ScenarioWrapper:
             raise NetError(len(all_net_files))
         return os.path.join(file_directory, all_net_files[0].attrib['value'])
 
-    def print_lanelet_net(self, with_lane_id=True, with_succ_pred=False, with_adj=False, with_speed=False):
+    def print_lanelet_net(self, with_lane_id=True, with_succ_pred=False, with_adj=False, with_speed=False) -> None:
+        """
+        Prints the lanelet net.
+
+        :param with_lane_id: if true, shows the lane id.
+        :param with_succ_pred: if true, shows the successors and precessors.
+        :param with_adj: if true, show the adjacent lanelets.
+        :param with_speed: if true, shows the speed limit of the lanelt.
+
+        """
         plt.figure(figsize=(25, 25))
         plt.gca().set_aspect('equal')
         draw_object(self.lanelet_network)

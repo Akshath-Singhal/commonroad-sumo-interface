@@ -15,15 +15,15 @@ __maintainer__ = "Moritz Klischat"
 __email__ = "commonroad-i06@in.tum.de"
 __status__ = "Released"
 
-def create_video(sumo_sim: SumoSimulation, video_start:int, video_end:int, out_folder:str):
+def create_video(sumo_sim: SumoSimulation, video_start:int, video_end:int, out_folder:str) -> None:
     """
-    Create video from simulated scenario.
+    Creates a video from the simulated scenario.
 
     :param sumo_sim: the sumo simulation instance
     :param video_start: initial time step of the video
-    :param video_stop: final step of the video
+    :param video_end: final step of the video
     :param out_folder: folder for video output
-    :return:
+
     """
     if video_start < 1 or video_end > sumo_sim.current_time_step:
         warnings.warn('<create_video>: Requesting time interval [{},{}] that has not been simulated yet. Choose from interval [1,{}]'
@@ -57,13 +57,15 @@ def create_video(sumo_sim: SumoSimulation, video_start:int, video_end:int, out_f
             plt.savefig(plot_dir + '/' + str(t) + '.svg')
 
 
-def draw_plot(sumo_sim: SumoSimulation, time_step:int=None, _draw_params_ego=None, _draw_params_obstacle=None):
+def draw_plot(sumo_sim: SumoSimulation, time_step:int = None, _draw_params_ego = None, _draw_params_obstacle = None) -> None:
     """
     create a plot of the current simulation
-    :param sumo_sim: instance of simulation
-    :param scenario_name: name of the scenario where simulation happen
 
-    :return:
+    :param sumo_sim: instance of simulation
+    :param time_step: the time step of the plot
+    :param _draw_params_ego: drawing parameters for ego vehicles
+    :param _draw_params_obstacle: drawing parameters for obstacles
+    
     """
     if time_step is None:
         time_step = sumo_sim.current_time_step
@@ -121,17 +123,18 @@ def draw_plot(sumo_sim: SumoSimulation, time_step:int=None, _draw_params_ego=Non
     plt.draw()
 
 # Print iterations progress
-def _printProgressBar (iteration, total, prefix ='', suffix ='', decimals = 1, length = 100, fill ='█'):
+def _printProgressBar (iteration:int, total:int, prefix:str ='', suffix:str ='', decimals:int = 1, length:int = 100, fill:str ='█') -> None:
     """
     Call in a loop to create terminal progress bar
-    @params:
-        iteration   - Required  : current iteration (Int)
-        total       - Required  : total iterations (Int)
-        prefix      - Optional  : prefix string (Str)
-        suffix      - Optional  : suffix string (Str)
-        decimals    - Optional  : positive number of decimals in percent complete (Int)
-        length      - Optional  : character length of bar (Int)
-        fill        - Optional  : bar fill character (Str)
+
+    :param iteration: Required  : current iteration 
+    :param total:     Required  : total iterations 
+    :param prefix:    Optional  : prefix string 
+    :param suffix:    Optional  : suffix string 
+    :param decimals:  Optional  : positive number of decimals in percent complete 
+    :param length:    Optional  : character length of bar 
+    :param fill:      Optional  : bar fill character 
+
     """
 
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))

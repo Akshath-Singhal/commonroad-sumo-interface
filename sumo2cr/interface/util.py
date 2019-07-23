@@ -5,6 +5,7 @@ import warnings
 
 import sumo_config.default
 from sumo_config import plot_params
+from typing import List, Tuple
 
 __author__ = "Moritz Klischat"
 __copyright__ = "TUM Cyber-Physical Systems Group"
@@ -14,10 +15,12 @@ __maintainer__ = "Moritz Klischat"
 __email__ = "commonroad-i06@in.tum.de"
 __status__ = "Released"
 
-def get_route_files(config_file):
+def get_route_files(config_file) -> List[str]:
     """
-    :param config_file: SUMO sumo_config file (.sumocfg)
-    :return: net-file and route-files specified in the sumo_config file
+    Returns net-file and route-files specified in the config file.
+
+    :param config_file: SUMO config file (.sumocfg)
+
     """
     if not os.path.isfile(config_file):
         raise FileNotFoundError(config_file)
@@ -36,9 +39,13 @@ def get_route_files(config_file):
     return route_files
 
 
-def initialize_id_dicts(id_convention):
-    """From id_convention, create empty nested dict structure for sumo2cr and cr2sumo dicts.
-            id_convention: dict with mapping of object type to start number of id"""
+def initialize_id_dicts(id_convention: dict) -> Tuple[dict, dict]:
+    """
+    Creates empty nested dict structure for sumo2cr and cr2sumo dicts from id_convention and returns them.
+    
+    :param id_convention: dict with mapping from object type to id start number
+    
+    """
     sumo2cr = {}
     cr2sumo = {}
     for k in id_convention:
@@ -48,8 +55,15 @@ def initialize_id_dicts(id_convention):
     cr2sumo['all_ids'] = {}
     return sumo2cr, cr2sumo
 
-def generate_cr_id(type, sumo_id, ids_sumo2cr):
-    """ Generates a new commonroad ID without adding it to any ID dictionary."""
+def generate_cr_id(type:str, sumo_id:int, ids_sumo2cr:dict) -> int:
+    """ 
+    Generates a new commonroad ID without adding it to any ID dictionary.
+    
+    :param type: one of the keys in params.id_convention; the type defines the first digit of the cr_id
+    :param sumo_id: id in sumo simulation
+    :param ids_sumo2cr: dictionary of ids in sumo2cr
+
+    """
     if type not in sumo_config.default.ID_DICT:
         raise ValueError(
             '{0} is not a valid type of id_convention. Only allowed: {1}'.format(type, sumo_config.default.ID_DICT.keys()))
@@ -66,9 +80,12 @@ def generate_cr_id(type, sumo_id, ids_sumo2cr):
     return cr_id
 
 
-def cr2sumo(cr_id, ids_cr2sumo):
-    """ gets CommonRoad ID and returns corresponding SUMO ID
-    :param ids_cr2sumo:
+def cr2sumo(cr_id:int, ids_cr2sumo:dict) -> int:
+    """ 
+    Gets CommonRoad ID and returns corresponding SUMO ID.
+    
+    :param ids_cr2sumo: dictionary of ids in cr2sumo
+    
     """
 
     if type(cr_id) == list:
@@ -83,8 +100,14 @@ def cr2sumo(cr_id, ids_cr2sumo):
         raise ValueError('Commonroad id {0} does not exist.'.format(cr_id))
 
 
-def sumo2cr(sumo_id, ids_sumo2cr):
-    """ gets SUMO ID and returns corresponding CommonRoad ID """
+def sumo2cr(sumo_id:int, ids_sumo2cr:dict) -> int:
+    """ 
+    Returns corresponding CommonRoad ID according to sumo id. 
+    
+    :param sumo_id: sumo id
+    :param ids_sumo2cr: dictionary of ids in sumo2cr.
+
+    """
     if sumo_id is None:
         return None
     elif sumo_id in ids_sumo2cr['all_ids']:
@@ -97,7 +120,10 @@ def sumo2cr(sumo_id, ids_sumo2cr):
 
 
 class NetError(Exception):
-    """ Exception raised if there is no net-file or multiple net-files """
+    """ 
+    Exception raised if there is no net-file or multiple net-files. 
+
+    """
     def __init__(self, len):
         self.len = len
 
@@ -109,14 +135,20 @@ class NetError(Exception):
 
 
 class RouteError(Exception):
-    """ Exception raised if there is no route-file """
+    """ 
+    Exception raised if there is no route-file. 
+
+    """
     def __str__(self):
         return repr('There is no route-file.')
 
 
 
 class OutOfLanelet(Exception):
-    """ Exception raised if the position of the ego vehicle is outside all lanelets """
+    """ 
+    Exception raised if the position of the ego vehicle is outside all lanelets.
+    
+    """
     def __init__(self, position):
         self.position = position
 
