@@ -88,4 +88,7 @@ sumo_sim.stop()
 create_video(sumo_sim, conf.video_start, conf.video_end, output_folder)
 ```
 
+## Troubleshooting
+*    `Error: No option with the name 'lanechange.smooth-change' exists.`: Make SUMO is installed correctly and the SUMO_HOME variable is set to the path where SUMO is installed. If you don't want to use the continous lane change, delete the corresponding line from the *.cfg file.
+
 [1] Moritz Klischat, Octav Dragoi, Mostafa Eissa, and Matthias Althoff, Coupling SUMO with a Motion Planning Framework for Automated Vehicles, SUMO 2019: Simulating Connected Urban Mobility
