@@ -10,7 +10,7 @@ import warnings
 
 from commonroad.common.util import Interval
 from lxml import etree
-from commonroad.common.file_writer import CommonRoadFileWriter
+from commonroad.common.file_writer import CommonRoadFileWriter, OverwriteExistingFile
 from opendrive2lanelet.network import Network
 from opendrive2lanelet.opendriveparser.parser import parse_opendrive
 from sumo_config.default import EGO_ID_START
@@ -61,9 +61,9 @@ def convert_net_to_cr(net_file:str, out_folder:str=None,verbose=False) -> str:
     # write CommonRoad scenario to file
     commonroad_writer = CommonRoadFileWriter(scenario, planning_problem_set=None,
                                              source="Converted from SUMO net using netconvert and OpenDRIVE 2 Lanelet Converter",
-                                             tags='',author='',affiliation='')
-    with open(cr_map_file, "w") as fh:
-        commonroad_writer.write_scenario_to_file_io(file_io=fh)
+                                             tags=set(), author='',affiliation='')
+
+    commonroad_writer.write_scenario_to_file(filename=cr_map_file, overwrite_existing_file=OverwriteExistingFile.ALWAYS)
 
     return cr_map_file
 
