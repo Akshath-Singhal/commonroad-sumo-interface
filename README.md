@@ -15,7 +15,7 @@ And add the absolute path of `commonroad-sumo-interface` to your Python interpre
 
 ## Install SUMO
 
-Clone a customized version of SUMO for smooth lane changes from https://github.com/octavdragoi/sumo and check out branch `smooth-lane-change`.
+Clone a customized version of SUMO for smooth lane changes from https://github.com/mo-kli/sumo and check out branch `smooth-lane-change`.
 For installation we recommend building with:
 
 ```
